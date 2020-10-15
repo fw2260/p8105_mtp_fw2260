@@ -7,6 +7,23 @@ output: github_document
 
 ```{r setup}
 library(tidyverse)
+library(readxl)
+library(janitor)
 ```
 
-## Problem 1
+```{r clean_dataset}
+dogweights_df <- 
+  read_excel("./data/dogweights_07sept2020.xlsx",
+    range = "B2:F207") %>% 
+  clean_names() %>% 
+  mutate(
+    date = as.numeric(date),
+    date = excel_numeric_to_date(date, date_system = "modern")) %>% 
+  pivot_longer(raisin:gagne,
+               names_to = "name",
+               values_to = "lbs_oz") %>% 
+  relocate(date, name, lbs_oz, std)
+
+head(dogweights_df)
+```
+
