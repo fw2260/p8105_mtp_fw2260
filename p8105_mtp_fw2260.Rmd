@@ -21,9 +21,17 @@ dogweights_df <-
     date = excel_numeric_to_date(date, date_system = "modern")) %>% 
   pivot_longer(raisin:gagne,
                names_to = "name",
-               values_to = "lbs_oz") %>% 
-  relocate(date, name, lbs_oz, std)
+               values_to = "weight") %>% 
+  relocate(date, name, weight, std) %>% 
+  separate(weight, c("lbs","oz"), " ") %>% 
+  mutate(lbs = as.numeric(lbs),
+         oz = as.numeric(oz),
+         oz = oz/16,
+         weight = lbs + oz) %>% 
+  group_by(date) %>% 
+  mutate(std = sd(weight, na.rm = TRUE)) %>% 
+  select(date, name, weight, std)
 
-head(dogweights_df)
+view(dogweights_df)
 ```
 
