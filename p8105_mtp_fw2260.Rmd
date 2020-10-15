@@ -1,0 +1,12 @@
+---
+title: "Midterm Project"
+author: "Lily Wang"
+date: "10/15/2020"
+output: github_document
+---
+
+```{r setup}
+library(tidyverse)
+```
+
+## Problem 1
