@@ -9,6 +9,15 @@ output: github_document
 library(tidyverse)
 library(readxl)
 library(janitor)
+library(patchwork)
+
+knitr::opts_chunk$set(
+  fig.width = 6,
+  fig.asp = .6,
+  out.width = "90%"
+)
+
+theme_set(theme_minimal() + theme(legend.position = "bottom"))
 ```
 
 The `dogweights` dataset contains the weights of three dogs, Simone, Gagne, and Raisin in pounds, along with some occasional notes, from 2018 to 2020. The dogs are weighed every few days and a standard weight is weighed occasionally as well to ensure accuracy. 
@@ -51,3 +60,31 @@ view(dogweights_df)
 The cleaned `dogweights` dataset is `r nrow(dogweights_df)` rows and `r ncol(dogweights_df)` columns and does not contain notes. One entry between 1/19/19 and 1/26/19 had an invalid date so it was dropped. The weights in the original dataset were entered as pounds and ounces separated by a space, which were converted into pounds with decimals instead, for ease of visualization later. Cells that had no weight entry were dropped.
 
 The notes from the original dataset were transferred to a separate `notes` dataset that contains just the notes and the dates they were taken on.
+
+```{r plots}
+distr_plot <- 
+  dogweights_df %>% 
+  filter(name != "std") %>% 
+  ggplot(aes(x = name, y = weight)) +
+  geom_boxplot() +
+  labs(
+    title = "Weight distribution",
+    x = "Dog",
+    y = "Weight (pounds)"
+  )
+
+time_plot <-
+  dogweights_df %>% 
+  filter(name != "std") %>% 
+  ggplot(aes(x = date, y = weight, color = name)) +
+  geom_line() +   
+  labs(
+    title = "Weight over time",
+    x = "Date",
+    y = "Weight (pounds)",
+    caption = "Data from dogweights_07sept2020.xlsx"
+  )
+
+distr_plot + time_plot
+```
+
