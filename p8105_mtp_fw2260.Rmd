@@ -20,13 +20,13 @@ knitr::opts_chunk$set(
 theme_set(theme_minimal() + theme(legend.position = "bottom"))
 ```
 
-The `dogweights` dataset contains the weights of three dogs, Gagne, Simone, and Raisin, in pounds, along with some occasional notes, from 2018 to 2020. The dogs were weighed every few days and a standard weight was weighed occasionally as well to ensure accuracy. This report will explain the process of cleaning this dataset and performing some exploratory analyses and visualizations on it.
+The `dogweights` dataset contains the weights of three dogs, Gagne, Simone, and Raisin, in pounds and ounces, along with some occasional notes, from 2018 to 2020. The dogs were weighed every few days and a standard object was weighed occasionally as well to ensure accuracy. This report will explain the process of cleaning this dataset and performing some exploratory analyses and visualizations of it.
 
 ## Cleaning the dataset
 
 Importing, cleaning, then exporting the `dogweights` dataset as csv files:
 
-```{r clean_datasets}
+```{r clean_datasets, message = FALSE}
 dogweights_df <- 
   read_excel("./data/dogweights_07sept2020.xlsx",
     range = "B2:G207") %>% 
@@ -66,7 +66,7 @@ The notes column from the original dataset was transferred to a separate `notes`
 
 To make the remaining dataset tidier, the four columns that contained the weights of each dog and the standard object were combined into one `weight` column. The weights were also originally entered as pounds and ounces separated by a space, which were converted into pounds with decimals instead, for ease of visualization later.
 
-**Inconsistent entries:** Originally, the entry between 2019-01-19 and 2019-01-26 had an invalid date so it was deleted. Raisin's weights on 2018-10-22 and 2019-07-23 were missing a space so a space was added for consistency with the other entries. Also, Raisin's weight on 2019-08-14 was presumably missing a tens digit, so one was added. Finally, empty weight entries were deleted.
+**Inconsistent entries:** Originally, the entry between 2019-01-19 and 2019-01-26 had an invalid date so it was deleted. Raisin's weights on 2018-10-22 and 2019-07-23 were missing a space so a space was added for consistency with the other entries. Raisin's weight on 2019-08-14 was presumably missing a tens digit, so one was added. Finally, empty weight entries were deleted.
 
 
 ## Exploratory data analyses
@@ -75,7 +75,7 @@ The cleaned `dogweights` dataset is `r nrow(dogweights_df)` rows and `r ncol(dog
 
 Making a table of the number of observations for each dog, along with their average weight and the standard deviation:
 
-```{r make_table}
+```{r make_table, message = FALSE}
 dogweights_df %>% 
   filter(name != "std") %>% 
   group_by(name) %>% 
@@ -84,6 +84,8 @@ dogweights_df %>%
 ```
 
 ## Visualizations
+
+Making a two-panel plot showing the distribution of weights for each dog on the left and their weights over time on the right:
 
 ```{r plots}
 distr_plot <- 
